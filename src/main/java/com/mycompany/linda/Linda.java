@@ -15,7 +15,7 @@ package com.mycompany.linda;
 import java.io.IOException;
 
 
-public class Linda  extends Conexion{
+public class Linda  extends Connexion{
 
   //Extends Connexion so it can use the sockets and everything else
     int servNum=1;
@@ -25,29 +25,18 @@ public class Linda  extends Conexion{
 
     public void startLinda() {//Server start Method
         try {
+            
             System.out.println("Waiting..."); //Waiting for a connection
-            LindaThread ltd= new LindaThread("Linda"+servNum);
+            while(true){
+                cs=ss.accept(); //Accept starts the socket and waits for a connexion from a client
+                LindaThread ltd= new LindaThread("Linda"+servNum);
+                ltd.startLinda();
 
-            ltd.startLinda();
-
-              servNum++;
-
+                servNum++;
+           }
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-    
-   
-    
-    
-    public static void readNode(){
-        
-    }
-    public static void removeNote(){
-        
-    }
-    public static void postNote(){
-        
     }
 }

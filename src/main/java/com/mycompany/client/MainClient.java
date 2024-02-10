@@ -1,5 +1,6 @@
-package com.mycompany.linda;
+package com.mycompany.client;
 
+import com.mycompany.client.Client;
 import java.io.IOException;
 
 //Main class that uses Client
