@@ -1,8 +1,8 @@
 /*
- * The touples used to develop the program will have variable sizes with a maximum 
+ * The tuples used to develop the program will have variable sizes with a maximum 
  * of 6 elements and all of them will be Strings.
  * A variable inside a Tuple is always identified with "?" followed by an 
- * uppercase letter(A-Z).
+ * upper case letter(A-Z).
  * The server is formed by 3 servers that are executed in different devices, 
  * tasked with storing and managing the operations that are done on the tuples 
  * that match it's conditions. 
@@ -14,8 +14,8 @@ package com.mycompany.linda;
 
 import java.io.IOException;
 
-//Extends Connexion so it can use the sockets and everything else
-public class Linda extends Connexion { 
+//Extends Connection so it can use the sockets and everything else
+public class Linda extends Connection { 
 	
     public Linda() throws IOException {
     	super("server");
@@ -36,6 +36,4 @@ public class Linda extends Connexion {
             System.out.println(e.getMessage());
         }
     }
-    
-
 }
