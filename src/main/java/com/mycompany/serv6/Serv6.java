@@ -21,7 +21,7 @@ import java.io.IOException;
 public class Serv6 extends ConnectionServ6{
     
 	public Serv6() throws IOException {
-    	super("serv");
+    	super("server");
     }
 	
 	public void startServ6() {

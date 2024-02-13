@@ -17,4 +17,21 @@ public class ConnectionReplica {
 			cs=new Socket(HOST,PORT);
 		}
 	}
+
+	public ServerSocket getSs() {
+		return ss;
+	}
+
+	public void setSs(ServerSocket ss) {
+		this.ss = ss;
+	}
+
+	public Socket getCs() {
+		return cs;
+	}
+
+	public void setCs(Socket cs) {
+		this.cs = cs;
+	}
+	
 }

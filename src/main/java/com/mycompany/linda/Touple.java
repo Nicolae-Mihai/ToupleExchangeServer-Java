@@ -12,13 +12,13 @@ import java.util.List;
  */
 
 public class Touple< A, B, C, D, E, F> {
-    private final A first;
-//    private final B second;
-//    private final C third;
-//    private final D fourth;
-//    private final E fifth;
-//    private final F sixth;
-    private final List elem;
+    private  A first;
+    private  B second;
+    private  C third;
+    private  D fourth;
+    private  E fifth;
+    private  F sixth;
+    private  List elem;
     
 //  constructor for a touple with one element also called a Unit
     public Touple(A first){
@@ -76,11 +76,11 @@ public class Touple< A, B, C, D, E, F> {
 //  Constructor for a touple with 6 elements also called a sextet
     public Touple(A first,B second, C third, D fourth, E fifth, F sixth){
         this.first=first;
-//        this.second=second;
-//        this.third=third;
-//        this.fourth=fourth;
-//        this.fifth=fifth;
-//        this.sixth=sixth;
+        this.second=second;
+        this.third=third;
+        this.fourth=fourth;
+        this.fifth=fifth;
+        this.sixth=sixth;
         
         elem=new ArrayList<>();
         elem.add(first);

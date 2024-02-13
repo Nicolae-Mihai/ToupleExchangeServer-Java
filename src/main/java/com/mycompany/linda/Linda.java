@@ -13,14 +13,19 @@
 package com.mycompany.linda;
 
 import java.io.IOException;
+import java.net.Socket;
+
+import com.mycompany.replica1_3.ConnectionReplica;
+
+//import com.mycompany.replica1_3.ConnectionReplica;
 
 //Extends Connection so it can use the sockets and everything else
 public class Linda extends ConnectionLinda { 
 	
+
     public Linda() throws IOException {
     	super("server");
     }
-
     public void startLinda() {//Server start method
         try {
         	System.out.println("Waiting..."); //Waiting for connection
@@ -30,6 +35,9 @@ public class Linda extends ConnectionLinda {
 	            LindaThread ldt =new LindaThread(i,this.cs);
 	            ldt.start();
 	            i++;
+	            ConnectionReplica replica=new ConnectionReplica("client");
+	            Socket csReplica =replica.getCs();
+
         	}
         }
         catch (Exception e) {

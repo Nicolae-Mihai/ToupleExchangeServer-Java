@@ -33,7 +33,7 @@ public class LindaThread extends Thread{
 	        while(true) {
 	    
 	        	String message = in.readUTF();
-	
+	        	
 	            if(message.equalsIgnoreCase("END OF SERVICE")) break;
 	            System.out.println("Message received -> " + message + " by Linda" + id);
 	            out.writeUTF("Received -> " + message);
