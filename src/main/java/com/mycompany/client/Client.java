@@ -12,7 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Client extends Connexion {
+public class Client extends ConnexionClient {
     public Client() throws IOException {
     	super("client");
     } //We use the constructor for client from Connection

@@ -15,7 +15,7 @@ package com.mycompany.linda;
 import java.io.IOException;
 
 //Extends Connection so it can use the sockets and everything else
-public class Linda extends Connection { 
+public class Linda extends ConnectionLinda { 
 	
     public Linda() throws IOException {
     	super("server");

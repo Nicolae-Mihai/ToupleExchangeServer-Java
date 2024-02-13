@@ -18,7 +18,7 @@ import java.io.IOException;
  *
  * @author gusti
  */
-public class Serv6 extends Connection{
+public class Serv6 extends ConnectionServ6{
     
 	public Serv6() throws IOException {
     	super("serv");

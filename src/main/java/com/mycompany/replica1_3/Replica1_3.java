@@ -14,7 +14,7 @@ import java.io.IOException;
  *
  * @author gusti
  */
-public class Replica1_3 extends Connection{
+public class Replica1_3 extends ConnectionReplica{
  
 	public Replica1_3() throws IOException{
     	super("server");
