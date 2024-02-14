@@ -42,15 +42,7 @@ public class LindaThread extends Thread {
 	    
 	        	String message = in.readUTF();
 	        	words=message.split(",");
-	        	
-//	        	for (String string : words) 
-//					System.out.println(string+" comma ");
-	        	//this is here for testing purposes 
-	        	
-//	        	Tuple tuple=new Tuple(words[0], words[1], words[2], words[3]);
-	        	System.out.println();
-//	        	tuple.print();
-	        	
+				System.out.println();
 	        	if(0 < words.length && words.length<4) {
 
 					//TODO: hay que hacer que la replica se levante cuando se caiga el serv al que esta asociado
