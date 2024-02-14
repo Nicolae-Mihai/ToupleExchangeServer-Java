@@ -28,33 +28,32 @@ public class LindaThread extends Thread {
 		try {
 			String[] words= {};
 			System.out.println("Client online");
-	        DataInputStream in;
-			in = new DataInputStream(cs.getInputStream());
+	        DataInputStream in = new DataInputStream(cs.getInputStream());
 	        DataOutputStream out = new DataOutputStream(cs.getOutputStream());
 	
 	        //Sends a message to the client using its own tunnel
 	        out.writeUTF("Request recieved and accepted");
-	        
+	        ConnectionServ1_3 serv1_3 = new ConnectionServ1_3("client");
+    		ConnectionServ4_5 serv4_5 = new ConnectionServ4_5("client");
+    		ConnectionServ6 serv6 = new ConnectionServ6("client");
+    		ConnectionReplica replica = new ConnectionReplica("client");
 			
 	        
 			while(true) {
 	    
 	        	String message = in.readUTF();
 	        	words=message.split(",");
-				System.out.println();
+				System.out.println(words.length);
 	        	if(0 < words.length && words.length<4) {
-	        		ConnectionServ1_3 serv1_3 = new ConnectionServ1_3("client");
-	        		ConnectionReplica replica= new ConnectionReplica("client");
+
 					if(serv1_3.getCs() ==null)
 	        			servIDK(replica.getCs(), message);
 					else 
 						servIDK(serv1_3.getCs(), message);
 					
-	        	}else if(3<words.length || words.length<6){
-					ConnectionServ4_5 serv4_5=new ConnectionServ4_5("client");
+	        	}else if(3<words.length && words.length<6){
 					servIDK(serv4_5.getCs(), message);
 				}else {
-					ConnectionServ6 serv6=new ConnectionServ6("client");
 					servIDK(serv6.getCs(), message);
 				}
 	        	if(message.equalsIgnoreCase("END OF SERVICE")) break;
