@@ -17,4 +17,7 @@ public class ConnectionServ1_3 {
 			cs=new Socket(HOST,PORT);
 		}
 	}
+	public Socket getCs(){
+		return this.cs;
+	}
 }

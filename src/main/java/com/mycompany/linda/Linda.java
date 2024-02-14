@@ -32,7 +32,7 @@ public class Linda extends ConnectionLinda {
         	int i=0;	            
         	while(true) {
 	            cs = ss.accept(); //Accept starts the socket and waits for a connection from a client
-	            LindaThread ldt =new LindaThread(i,this.cs);
+	            LindaThread ldt =new LindaThread(i, this.cs);
 	            ldt.start();
 	            i++;
 //	            ConnectionReplica replica=new ConnectionReplica("client");
