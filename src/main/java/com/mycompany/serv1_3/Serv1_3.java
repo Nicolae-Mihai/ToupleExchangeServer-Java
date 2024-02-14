@@ -17,7 +17,6 @@ package com.mycompany.serv1_3;
 import java.io.IOException;
 
 public class Serv1_3 extends ConnectionServ1_3{
-    
 	public Serv1_3() throws IOException {
     	super("server");	
 	}

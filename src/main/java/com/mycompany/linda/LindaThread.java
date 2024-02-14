@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import com.mycompany.replica1_3.ConnectionReplica;
 import com.mycompany.serv1_3.ConnectionServ1_3;
@@ -44,12 +43,13 @@ public class LindaThread extends Thread {
 	        	words=message.split(",");
 				System.out.println();
 	        	if(0 < words.length && words.length<4) {
-
-					//TODO: hay que hacer que la replica se levante cuando se caiga el serv al que esta asociado
-	        		ConnectionReplica replica = new ConnectionReplica("client");
-	        		servIDK(replica.getCs(), message);
 	        		ConnectionServ1_3 serv1_3 = new ConnectionServ1_3("client");
-					servIDK(serv1_3.getCs(), message);
+	        		ConnectionReplica replica= new ConnectionReplica("client");
+					if(serv1_3.getCs() ==null)
+	        			servIDK(replica.getCs(), message);
+					else 
+						servIDK(serv1_3.getCs(), message);
+					
 	        	}else if(3<words.length || words.length<6){
 					ConnectionServ4_5 serv4_5=new ConnectionServ4_5("client");
 					servIDK(serv4_5.getCs(), message);
