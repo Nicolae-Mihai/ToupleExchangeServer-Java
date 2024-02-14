@@ -35,8 +35,8 @@ public class Linda extends ConnectionLinda {
 	            LindaThread ldt =new LindaThread(i,this.cs);
 	            ldt.start();
 	            i++;
-	            ConnectionReplica replica=new ConnectionReplica("client");
-	            Socket csReplica =replica.getCs();
+//	            ConnectionReplica replica=new ConnectionReplica("client");
+//	            Socket csReplica =replica.getCs();
 
         	}
         }

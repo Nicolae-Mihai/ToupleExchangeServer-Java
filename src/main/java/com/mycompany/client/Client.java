@@ -29,7 +29,7 @@ public class Client extends ConnexionClient {
             
             try (Scanner entry = new Scanner(System.in)) {
 				while(true) {
-					System.out.println("Write a message (END OF SERVICE to close): ");
+					System.out.println("Write a tuple and separate the elements by commas(',') (END OF SERVICE to close): ");
 					String strin = entry.nextLine();
 					out.writeUTF(strin);
 					if(strin.equalsIgnoreCase("END OF SERVICE")) break;
