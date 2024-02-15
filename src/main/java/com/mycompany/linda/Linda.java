@@ -13,9 +13,7 @@
 package com.mycompany.linda;
 
 import java.io.IOException;
-import java.net.Socket;
 
-import com.mycompany.replica1_3.ConnectionReplica;
 
 //import com.mycompany.replica1_3.ConnectionReplica;
 

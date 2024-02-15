@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 
 
+
+
 public class Serv1_3Thread extends Thread{
 	
 	private int id;
@@ -18,7 +20,7 @@ public class Serv1_3Thread extends Thread{
 	@Override
 	public void run(){
 		try {
-			System.out.println("Connection realised");
+			System.out.println("Connection accepted");
 			DataInputStream in = new DataInputStream(cs.getInputStream());
 			DataOutputStream out = new DataOutputStream(cs.getOutputStream());
 			
@@ -26,8 +28,9 @@ public class Serv1_3Thread extends Thread{
 			while(true) {
 				String message= in.readUTF();
 				
-				if(message.equalsIgnoreCase("END OF SERVICE")) break;
-				System.out.println("Message recieved -> "+message+"by Serv1_3"+id);
+        		if(message.equalsIgnoreCase("END OF SERVICE")) break;
+				
+        		System.out.println("Message recieved -> "+message+" by Serv1_3"+id);
 				out.writeUTF("Recieved by Serv1_3"+id+" -> "+message);
 			}
 			cs.close();

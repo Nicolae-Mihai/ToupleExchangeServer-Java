@@ -41,7 +41,7 @@ public class Tuple {
         return this.elem;
     }
     public void print() {
-    	System.out.println(this.first+" comma "+this.second+" comma "+this.third+" comma "+this.fourth+" comma ");
+    	System.out.println(elem);
     }
      
 }
