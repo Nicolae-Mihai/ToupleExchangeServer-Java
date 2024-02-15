@@ -2,10 +2,9 @@ package com.mycompany.serv1_3;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 
-import com.mycompany.replica1_3.ConnectionReplica;
+
 
 
 public class Serv1_3Thread extends Thread{
@@ -29,12 +28,9 @@ public class Serv1_3Thread extends Thread{
 			while(true) {
 				String message= in.readUTF();
 				
-				ConnectionReplica replica = new ConnectionReplica("client");
-        		servIDK(replica.getCs(), message);
-				
         		if(message.equalsIgnoreCase("END OF SERVICE")) break;
 				
-        		System.out.println("Message recieved -> "+message+"by Serv1_3"+id);
+        		System.out.println("Message recieved -> "+message+" by Serv1_3"+id);
 				out.writeUTF("Recieved by Serv1_3"+id+" -> "+message);
 			}
 			cs.close();
@@ -42,12 +38,4 @@ public class Serv1_3Thread extends Thread{
 			System.out.println(e.getMessage());
 		}
 	}
-	private void servIDK(Socket servSocket,String words) throws IOException{
-		DataInputStream in= new DataInputStream(servSocket.getInputStream());
-		DataOutputStream out= new DataOutputStream(servSocket.getOutputStream());
-		String message= in.readUTF();
-		System.out.println(message);
-		out.writeUTF(words);
-		
-}
 }
