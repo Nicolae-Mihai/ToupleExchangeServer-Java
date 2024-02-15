@@ -44,32 +44,33 @@ public class LindaThread extends Crud {
 			while(true) {
 				
 				//calls the method check
-				String message = in.readUTF();
-				check();
-	        	words=message.split(",");
-				System.out.println(words.length);
-	        	if(message=="Not a choice")
-	        		out.writeUTF("");
-				if(0 < words.length && words.length<5) {
-					if(replica!=null)
-	        			servIDK(replica.getCs(), message);
-					if(serv1_3!=null)
-						servIDK(serv1_3.getCs(), message);
-					
-	        	}else if(4<words.length && words.length<7){
-					servIDK(serv4_5.getCs(), message);
-	        	}else if(7<words.length && words.length<8){
-					servIDK(serv6.getCs(), message);
-				}else if(8<words.length){
-					System.out.println("Please limit yourself to only 6 touples max!");
+				if(this.cs.isConnected()) {
+					String message = in.readUTF();
+					check();
+		        	words=message.split(",");
+					System.out.println(words.length);
+		        	if(message=="Not a choice")
+		        		out.writeUTF("");
+					if(0 < words.length && words.length<5) {
+						if(replica!=null)
+		        			servIDK(replica.getCs(), message);
+						if(serv1_3!=null)
+							servIDK(serv1_3.getCs(), message);
+						
+		        	}else if(4<words.length && words.length<7){
+						servIDK(serv4_5.getCs(), message);
+		        	}else if(7<words.length && words.length<8){
+						servIDK(serv6.getCs(), message);
+					}else if(8<words.length){
+						System.out.println("Please limit yourself to only 6 touples max!");
+					}
+		        	
+		        	if(message.equalsIgnoreCase("END OF SERVICE")) break;
+		            
+		        	System.out.println("Message received -> " + message + " by Linda" + id);
+		            out.writeUTF("Received -> " + message);
 				}
-	        	
-	        	if(message.equalsIgnoreCase("END OF SERVICE")) break;
-	            
-	        	System.out.println("Message received -> " + message + " by Linda" + id);
-	            out.writeUTF("Received -> " + message);
-	        }
-	       	
+			}
 	        cs.close();// Ends the connection with the client
 		} catch (IOException e) {
 			e.printStackTrace();

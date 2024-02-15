@@ -3,8 +3,6 @@
  */
 package com.mycompany.linda;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 
