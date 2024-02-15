@@ -1,10 +1,12 @@
 package com.mycompany.serv4_5;
 
+import com.mycompany.crud.Crud;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class Serv4_5Thread extends Thread{
+public class Serv4_5Thread extends Crud {
 	
 	private int id;
 	private Socket cs;

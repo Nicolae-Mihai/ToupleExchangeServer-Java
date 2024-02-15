@@ -1,5 +1,7 @@
 package com.mycompany.serv1_3;
 
+import com.mycompany.crud.Crud;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -7,7 +9,7 @@ import java.net.Socket;
 
 
 
-public class Serv1_3Thread extends Thread{
+public class Serv1_3Thread extends Crud {
 	
 	private int id;
 	private Socket cs;

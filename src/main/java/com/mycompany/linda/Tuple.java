@@ -16,18 +16,18 @@ public class Tuple {
     private String fifth = null;
     private String sixth = null;
 
-    private  List<String> elem;
+    private  List<String> elem = new ArrayList<>();
     
 //  constructor for a tuple with one element also called a Unit
     public Tuple(String[] array){
         int len = array.length;
 
-        if(len < 2) this.first = array[0];
-        if(len < 3) this.second = array[1];
-        if(len < 4) this.third= array[2];
-        if(len < 5) this.fourth = array[3];
-        if(len < 6) this.fifth = array[4];
-        if(len < 7) this.sixth = array[5];
+        if(len > 0) this.first = array[0];
+        if(len > 1) this.second = array[1];
+        if(len > 2) this.third= array[2];
+        if(len > 3) this.fourth = array[3];
+        if(len > 4) this.fifth = array[4];
+        if(len > 5) this.sixth = array[5];
 
         this.elem.add(first);
         if(second != null) this.elem.add(second);
@@ -37,7 +37,8 @@ public class Tuple {
         if(sixth != null) this.elem.add(sixth);
 
     }
-    public List<String> getElem(){
+    public List<
+            String> getElem(){
         return this.elem;
     }
     public void print() {

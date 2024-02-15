@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 
+import com.mycompany.crud.Crud;
 import com.mycompany.replica1_3.ConnectionReplica;
 import com.mycompany.serv1_3.ConnectionServ1_3;
 import com.mycompany.serv4_5.ConnectionServ4_5;
@@ -13,7 +14,7 @@ import com.mycompany.serv6.ConnectionServ6;
 
 
 
-public class LindaThread extends Thread {
+public class LindaThread extends Crud {
 	
 	private int id;
 	private Socket cs;

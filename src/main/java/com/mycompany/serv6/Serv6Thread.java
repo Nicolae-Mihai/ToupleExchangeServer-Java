@@ -1,11 +1,13 @@
 package com.mycompany.serv6;
 
+import com.mycompany.crud.Crud;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Serv6Thread extends Thread{
+public class Serv6Thread extends Crud {
 	private int id;
 	protected Socket cs;
 	
