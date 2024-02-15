@@ -50,8 +50,8 @@ public class Replica1_3Thread extends Thread{
 	private Tuple tuplifyer(String message){
 		String [] words = message.split(",");
 		String[] array = new String[words.length -1];
-		for(int i = 1; i < array.length; i++){
-			array[i - 1] = words[i];
+		for(int i = 0; i < words.length-1; i++){
+			array[i] = words[i+1];
 		}
 		Tuple tuple = new Tuple(array);
 
