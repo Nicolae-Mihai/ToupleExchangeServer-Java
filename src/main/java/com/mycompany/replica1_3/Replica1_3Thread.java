@@ -6,7 +6,6 @@ import com.mycompany.linda.Tuple;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Replica1_3Thread extends Crud {
