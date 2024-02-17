@@ -45,22 +45,22 @@ public class LindaThread extends Crud {
 				//calls the method check
 				if(this.cs.isConnected()) {
 					String message = in.readUTF();
-//					out.writeUTF("\n~~"+message+"~~\n");
 					check();
 		        	words=message.split(",");
 					System.out.println(words.length);
+					
 		        	if(message.equalsIgnoreCase("Not a choice"))
 		        		out.writeUTF("");
-					if(1 < words.length && words.length<5) {
+					
+		        	if(1 < words.length && words.length<5) {
 						if(replica!=null)
 		        			out.writeUTF(servIDK(replica.getCs(), message));
 						if(serv1_3!=null)
-							servIDK(serv1_3.getCs(), message);
+							out.writeUTF(servIDK(serv1_3.getCs(), message));
 						
 		        	}else if(4<words.length && words.length<7){
-						servIDK(serv4_5.getCs(), message);
+						out.writeUTF(servIDK(serv4_5.getCs(), message));
 		        	}else if(7<=words.length && words.length<8){
-//						servIDK(serv6.getCs(), message);
 	        			out.writeUTF(servIDK(serv6.getCs(), message));
 					}else if(8<words.length){
 						System.out.println("Please limit yourself to only 6 touples max!");
@@ -69,7 +69,6 @@ public class LindaThread extends Crud {
 		        	if(message.equalsIgnoreCase("END OF SERVICE")) break;
 		            
 		        	System.out.println("Message received -> " + message + " by Linda" + id);
-		            out.writeUTF("Received -> " + message);
 				}
 			}
 	        cs.close();// Ends the connection with the client
@@ -84,8 +83,6 @@ public class LindaThread extends Crud {
 			DataInputStream in = new DataInputStream(servSocket.getInputStream());
 			DataOutputStream out = new DataOutputStream(servSocket.getOutputStream());
 			try {
-				String message = in.readUTF();
-				System.out.println(message);
 				out.writeUTF(words);
 				String response= in.readUTF();
 				System.out.println(response);

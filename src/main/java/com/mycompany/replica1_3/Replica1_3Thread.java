@@ -24,7 +24,6 @@ public class Replica1_3Thread extends Crud {
 			System.out.println("Client Online");
 			DataInputStream in = new DataInputStream(cs.getInputStream());
 			DataOutputStream out = new DataOutputStream(cs.getOutputStream());
-			out.writeUTF("Request received and accepted by Replica1_3"+this.id);
 			while(true) {
 				String message=in.readUTF();
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;

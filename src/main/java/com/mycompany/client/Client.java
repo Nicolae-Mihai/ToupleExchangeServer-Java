@@ -56,7 +56,6 @@ public class Client extends ConnexionClient {
 									System.out.println("You chose to read a note!\n do you know what the element "+element+" is?(Please write only the number)\n 1.Yes!\n 2.No!\n 3.Stop inserting");
 									tuple+=readNote(entry.nextLine());
 									element++;
-//									tuple=entry.nextLine();
 									}else rnr=false;
 									
 								}
@@ -70,7 +69,7 @@ public class Client extends ConnexionClient {
 							while (dnr) {
 								if(element<7) {
 									System.out.println("\nYou chose to delete a note!\n Do you know what the element "+element+" is?(Please write only the number)\n 1.Yes!\n 2.No!\n 3.Stop inserting.");
-									tuple+=deleteNote(entry.nextLine());//entry.nextLine();
+									tuple+=deleteNote(entry.nextLine());
 									element++;
 								}else dnr=false;
 							}

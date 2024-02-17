@@ -26,7 +26,6 @@ public class Serv1_3Thread extends Crud {
 			DataInputStream in = new DataInputStream(cs.getInputStream());
 			DataOutputStream out = new DataOutputStream(cs.getOutputStream());
 			
-			out.writeUTF("connected to Serv1_3"+id);
 			while(true) {
 				String message= in.readUTF();
 				
