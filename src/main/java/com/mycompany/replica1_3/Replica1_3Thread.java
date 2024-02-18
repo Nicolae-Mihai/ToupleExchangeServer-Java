@@ -31,11 +31,45 @@ public class Replica1_3Thread extends Crud {
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;
 				System.out.println("Message recieved -> "+message+" by Replica1_3"+id);
 				out.writeUTF("Recieved -> "+message);
+
+				//Extract the option from the message
 				int option = getOption(message);
+
+				//Transform the message into a tuple
 				Tuple tuple = tuplifyer(message);
-				String finalmessage = messagefyer(tuple);
-				System.out.println(finalmessage);
-				out.writeUTF(finalmessage);
+
+				//Switch case for the options
+				switch (option){
+
+					//Case for addNote
+					case 2:
+						ArrayList<Tuple> result = findNote(tuple, database);
+						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
+						else{
+
+							//Returns the message of every tuple in the result if not empty
+							for(Tuple t : result){
+								out.writeUTF(messagefyer(t));
+							}
+						}
+
+						break;
+
+						//Case for deleteNote
+					case 3:
+						List<Tuple> results = findNote(tuple, database);
+						this.database = deleteNote(results, database);
+						out.writeUTF("Coincident results were deleted");
+
+						break;
+
+					//Case for addNote
+					case 1:
+						this.database = addNote(tuple, database);
+						out.writeUTF("Tuple added succesfully");
+
+				}
+
 			}
 			cs.close();
 		} catch (Exception e) {

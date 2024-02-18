@@ -60,4 +60,24 @@ public class Crud extends Thread {
 
         return result;
     }
+
+    public List<Tuple> deleteNote(List<Tuple> tupleList, List<Tuple> database){
+        for(Tuple t : database){
+            for(Tuple tupleForDeletion : tupleList){
+                if (tupleForDeletion == t){
+                    database.remove(t);
+                }
+            }
+        }
+
+        return database;
+    }
+    //The addNote method contemplates the redundance of tuples in the database
+    public List<Tuple> addNote(Tuple t, List<Tuple> database){
+        database.add(t);
+
+        return database;
+    }
+
+
 }
