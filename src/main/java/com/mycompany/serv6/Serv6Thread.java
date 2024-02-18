@@ -7,12 +7,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Serv6Thread extends Crud {
 	private int id;
 	protected Socket cs;
-	public List<Tuple> database;
+	public List<Tuple> database = new ArrayList<>();
 	public Serv6Thread(int id,Socket cs) {
 		this.cs=cs;
 		this.id=id;
@@ -30,25 +31,44 @@ public class Serv6Thread extends Crud {
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;
 //				this switch checks for the type of action it should take and depending on it returns a different message
 //				to Linda which can in return send that information to the client
-				switch (words[0]) {
-					case "1": //insert note
-						out.writeUTF("serv6"+id+" inserted -> "+this.messagefyer(this.tuplifyer(message)));
+
+				//Extract the option from the message
+				int option = getOption(message);
+
+				//Transform the message into a tuple
+				Tuple tuple = tuplifyer(message);
+
+				//Switch case for the options
+				switch (option){
+
+					//Case for addNote
+					case 2:
+						ArrayList<Tuple> result = findNote(tuple, database);
+						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
+						else{
+
+							//Returns the message of every tuple in the result if not empty
+							for(Tuple t : result){
+								out.writeUTF(messagefyer(t));
+							}
+						}
+
 						break;
-					
-					case "2": //read note
-						// change the message to the
-						out.writeUTF("the result of your search is:\n"+this.findNote(this.tuplifyer(message), database));
-						
+
+					//Case for deleteNote
+					case 3:
+						List<Tuple> results = findNote(tuple, database);
+						this.database = deleteNote(results, database);
+						out.writeUTF("Coincident results were deleted");
+
 						break;
-					
-					case "3"://delete note
-						out.writeUTF("serv6"+id+" deleted -> "+this.messagefyer(this.tuplifyer(message)));
-						break;
-	
-					default:
-						break;
+
+					//Case for addNote
+					case 1:
+						this.database = addNote(tuple, database);
+						out.writeUTF("Tuple added succesfully");
+
 				}
-				System.out.println("Message recieved -> "+ message+" by Serv6"+id);			
 			}
 			
 			cs.close();

@@ -45,14 +45,16 @@ public class Crud extends Thread {
         for(String word : elem){
             if(!word.matches("[a-zA-Z]\\?")){
                 searchValues.add(word+pointer);
+
             }
+            pointer++;
         }
 
         //Now we proceed to search the tuples with those values in the indicated position
         ArrayList<Tuple> result = new ArrayList<>();
         for(Tuple t : database){
             for(String val : searchValues){
-                int position = val.charAt(val.length() - 1);
+                int  position = Integer.parseInt(val.substring(val.length() - 1));
                 String word = val.substring(0, val.length() - 1);
                 if(t.getElem().get(position).equalsIgnoreCase(word)) result.add(t);
             }

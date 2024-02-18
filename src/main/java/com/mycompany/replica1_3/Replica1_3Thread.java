@@ -6,12 +6,13 @@ import com.mycompany.linda.Tuple;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Replica1_3Thread extends Crud {
 	private int id;
 	private Socket cs;
-	public List<Tuple> database;
+	public List<Tuple> database = new ArrayList<>();
 	
 	public Replica1_3Thread(int id,Socket cs) {
 		this.id=id;
