@@ -23,7 +23,6 @@ public class Serv4_5Thread extends Crud {
 			DataInputStream in=new DataInputStream(cs.getInputStream());
 			DataOutputStream out= new DataOutputStream(cs.getOutputStream());
 			
-			out.writeUTF("Request recieved and accepted by Serv4_5"+id);
 			while (true) {
 				String message=in.readUTF();
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;

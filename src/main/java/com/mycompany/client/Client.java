@@ -17,6 +17,7 @@ public class Client extends ConnexionClient {
 	private boolean rnr;
 	private boolean dnr;
 	private String[] wildCard= {"A","B","C","D","E","F","G","H","I","J","K"};
+	int wci=0;
     public Client() throws IOException {
     	super("client");
     } //We use the constructor for client from Connection
@@ -26,14 +27,14 @@ public class Client extends ConnexionClient {
         	// Tunnel to receive information (In)
         	DataInputStream in = new DataInputStream(cs.getInputStream());
         	// Tunnel to send information (Out)
-            DataOutputStream out = new DataOutputStream(cs.getOutputStream());
+        	DataOutputStream out = new DataOutputStream(cs.getOutputStream());
             
             String message = in.readUTF();
             System.out.println(message);
             
             try (Scanner entry = new Scanner(System.in)) {
             	while(true) {
-            		int wci=0;
+            		
 					System.out.println("\nWelcome what action do you wish to take?(please insert only the number)\n 1.Insert a Note!\n 2.Read a Note\n 3.Delete a note!\n 4.Exit client!");
 					String strin = entry.nextLine();
 					String tuple="";
@@ -48,29 +49,35 @@ public class Client extends ConnexionClient {
 //						Write a tuple and press enter!\n In the fields where you don't know that to put just fill them with\n by a capital letter(Do not repeat them!)  followed  a question mark(?)\n  
 						case "2": //read note
 							int element=1;
+							this.wci=0;
 							rnr=true;
 								while(rnr) {
+									if(element<7) {
 									System.out.println("You chose to read a note!\n do you know what the element "+element+" is?(Please write only the number)\n 1.Yes!\n 2.No!\n 3.Stop inserting");
-									tuple+=readNote(entry.nextLine(),wci);
+									tuple+=readNote(entry.nextLine());
 									element++;
-//									tuple=entry.nextLine();
+									}else rnr=false;
+									
 								}
 							out.writeUTF("2"+tuple);
 							break;
 							
 						case "3": // delete note
 							element=1;
+							this.wci=0;
 							dnr=true;
 							while (dnr) {
-								
-								System.out.println("\nYou chose to delete a note!\n Do you know what the element "+element+" is?(Please write only the number)\n 1.Yes!\n 2.No!\n 3.Stop inserting.");
-								tuple+=deleteNote(entry.nextLine(),wci);//entry.nextLine();
-								element++;
+								if(element<7) {
+									System.out.println("\nYou chose to delete a note!\n Do you know what the element "+element+" is?(Please write only the number)\n 1.Yes!\n 2.No!\n 3.Stop inserting.");
+									tuple+=deleteNote(entry.nextLine());
+									element++;
+								}else dnr=false;
 							}
 							out.writeUTF("3"+tuple);
 							break;
 							
 						case "4":// exit client
+							out.writeUTF("END OF SERVICE");
 							running=false;
 							break;
 							
@@ -92,7 +99,7 @@ public class Client extends ConnexionClient {
             System.out.println(e.getMessage());
         }
     }
-    private String readNote(String entry,int wci) {
+    private String readNote(String entry) {
     	
     	switch (entry) {
 			case "1": //yes
@@ -102,8 +109,8 @@ public class Client extends ConnexionClient {
 				return element;
 			
 			case "2": //no
-				String variable = wildCard[wci];
-				wci++;
+				String variable = wildCard[this.wci];
+				this.wci++;
 				return ","+variable+"?";
 
 			case "3": //stoppu
@@ -116,7 +123,7 @@ public class Client extends ConnexionClient {
     	return "";
 		
 	}
-    private String deleteNote(String entry,int wci) {
+    private String deleteNote(String entry) {
     	
     	switch (entry) {
 			case "1": //yes
@@ -126,10 +133,11 @@ public class Client extends ConnexionClient {
 				return element;
 			
 			case "2": //no
-				String variable = wildCard[wci];
-				wci++;
+				
+				String variable = wildCard[this.wci];
+				this.wci++;
 				return ","+variable+"?";
-
+				
 			case "3": //stoppu
 				dnr=false;
 				break;

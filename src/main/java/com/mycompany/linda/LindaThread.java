@@ -37,7 +37,6 @@ public class LindaThread extends Crud {
 			System.out.println("Client online");
 	        DataInputStream in = new DataInputStream(cs.getInputStream());
 	        DataOutputStream out = new DataOutputStream(cs.getOutputStream());
-	
 	        //Sends a message to the client using its own tunnel
 	        out.writeUTF("Request recieved and accepted");
 			
@@ -49,18 +48,20 @@ public class LindaThread extends Crud {
 					check();
 		        	words=message.split(",");
 					System.out.println(words.length);
-		        	if(message=="Not a choice")
+					
+		        	if(message.equalsIgnoreCase("Not a choice"))
 		        		out.writeUTF("");
-					if(0 < words.length && words.length<5) {
+					
+		        	if(1 < words.length && words.length<5) {
 						if(replica!=null)
-		        			servIDK(replica.getCs(), message);
+		        			out.writeUTF(servIDK(replica.getCs(), message));
 						if(serv1_3!=null)
-							servIDK(serv1_3.getCs(), message);
+							out.writeUTF(servIDK(serv1_3.getCs(), message));
 						
 		        	}else if(4<words.length && words.length<7){
-						servIDK(serv4_5.getCs(), message);
-		        	}else if(7<words.length && words.length<8){
-						servIDK(serv6.getCs(), message);
+						out.writeUTF(servIDK(serv4_5.getCs(), message));
+		        	}else if(7<=words.length && words.length<8){
+	        			out.writeUTF(servIDK(serv6.getCs(), message));
 					}else if(8<words.length){
 						System.out.println("Please limit yourself to only 6 touples max!");
 					}
@@ -68,30 +69,30 @@ public class LindaThread extends Crud {
 		        	if(message.equalsIgnoreCase("END OF SERVICE")) break;
 		            
 		        	System.out.println("Message received -> " + message + " by Linda" + id);
-		            out.writeUTF("Received -> " + message);
 				}
 			}
 	        cs.close();// Ends the connection with the client
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Client disconnected!");
 		}
 	}
 
 //Pass the message to the server so you don't have to do it in every if statement
 	
-	private void servIDK(Socket servSocket,String words) throws IOException{
+	private String servIDK(Socket servSocket,String words) throws IOException{
 			DataInputStream in = new DataInputStream(servSocket.getInputStream());
 			DataOutputStream out = new DataOutputStream(servSocket.getOutputStream());
 			try {
-				String message = in.readUTF();
-				System.out.println(message);
 				out.writeUTF(words);
+				String response= in.readUTF();
+				System.out.println(response);
+				return response;
 				
 			} catch (Exception e) {
 				System.out.println("Can't connect to the server whose port is: "+servSocket.getPort());
 				servSocket.close();
 			}
-			
+			return "";
 	}
 	
 //	checks to see if there are any servers that down and if they are down attempts to connect to them 
