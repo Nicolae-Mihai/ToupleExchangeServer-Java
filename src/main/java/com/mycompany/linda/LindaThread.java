@@ -3,8 +3,11 @@ package com.mycompany.linda;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mycompany.crud.Crud;
 import com.mycompany.replica1_3.ConnectionReplica;
@@ -37,6 +40,7 @@ public class LindaThread extends Crud {
 			System.out.println("Client online");
 	        DataInputStream in = new DataInputStream(cs.getInputStream());
 	        DataOutputStream out = new DataOutputStream(cs.getOutputStream());
+	        
 	        //Sends a message to the client using its own tunnel
 	        out.writeUTF("Request recieved and accepted");
 			
@@ -46,20 +50,22 @@ public class LindaThread extends Crud {
 				if(this.cs.isConnected()) {
 					String message = in.readUTF();
 					check();
-		        	words=message.split(",");
+					checkLoss();
+					words=message.split(",");
 					System.out.println(words.length);
 					
 		        	if(message.equalsIgnoreCase("Not a choice"))
 		        		out.writeUTF("");
-//					TODO: CHECK TO SEE IF SERV1_3 IS RUNNING and make sure the doesn't return anything if serv1_3 is running,also take a look at delete method
-//		        	if the check is not made then both servers will respond at the same time and the servers will lag
+		        	
 		        	if(1 < words.length && words.length<5) {
-						if(serv1_3!=null) {
-							out.writeUTF(servIDK(serv1_3.getCs(), message));
-//							out.writeUTF(servIDK(replica.getCs(), message));
-						}
-						if(replica!=null)
-							servIDK(replica.getCs(), message);
+//			        	checks to see if either serv1_3 or replica is down,if the check is not made then both servers will respond at the same time and the servers will lag
+						if(serv1_3!=null || replica!=null) 
+							if(serv1_3!=null) {
+								out.writeUTF(servIDK(serv1_3.getCs(), message));
+								if(replica!=null)
+									servIDK(replica.getCs(), message);
+							}else if(replica!=null) 
+								out.writeUTF(servIDK(replica.getCs(), message));
 						
 		        	}else if(4<words.length && words.length<7){
 						out.writeUTF(servIDK(serv4_5.getCs(), message));
@@ -75,7 +81,7 @@ public class LindaThread extends Crud {
 				}
 			}
 	        cs.close();// Ends the connection with the client
-		} catch (IOException e) {
+		} catch (IOException | ClassNotFoundException e) {
 			System.out.println("Client disconnected!");
 		}
 	}
@@ -117,5 +123,51 @@ public class LindaThread extends Crud {
 			try {this.serv6 = new ConnectionServ6("client");} 
 				catch (Exception e) {System.out.println("Serv6 is offline");}
 		
+	}
+//	Method to check if there were losses in the servers database while one was down(serv1_3 and replica)
+	@SuppressWarnings("unchecked")
+	private void checkLoss() throws IOException, ClassNotFoundException {
+		ObjectOutputStream replicaOOut=new ObjectOutputStream(this.replica.getCs().getOutputStream());
+		ObjectInputStream replicaOIn=new ObjectInputStream(this.replica.getCs().getInputStream());
+		DataOutputStream replicaDOut = new DataOutputStream(this.replica.getCs().getOutputStream());
+//		DataInputStream replicaDIn = new DataInputStream(this.replica.getCs().getInputStream());
+
+		ObjectOutputStream serv1_3OOut=new ObjectOutputStream(this.serv1_3.getCs().getOutputStream());;
+		ObjectInputStream serv1_3OIn=new ObjectInputStream(this.serv1_3.getCs().getInputStream());
+		DataOutputStream Serv1_3DOut = new DataOutputStream(this.serv1_3.getCs().getOutputStream());
+//		DataInputStream serv1_3DIn = new DataInputStream(this.serv1_3.getCs().getInputStream());
+		
+		List<Tuple> replicaDB=new ArrayList<>();
+		List<Tuple> serv1_3DB = new ArrayList<>();
+		
+		String servDown="";
+		
+		if(this.serv1_3 == null && this.replica !=null) {
+			replicaDOut.writeUTF("4");
+			replicaDB=(List<Tuple>) replicaOIn.readObject();
+			servDown="serv1_3";
+		}
+		if(this.serv1_3 != null && this.replica ==null) {
+			Serv1_3DOut.writeUTF("4");
+			serv1_3DB=(List<Tuple>) serv1_3OIn.readObject();
+			servDown="replica";
+		}
+		
+		if (this.serv1_3 !=null && this.replica != null) {
+			if(!servDown.isBlank() && servDown.equalsIgnoreCase("serv1_3")) {
+				serv1_3DB=replicaDB;
+				Serv1_3DOut.writeUTF("5");
+				serv1_3OOut.writeObject(serv1_3DB);
+				servDown="";
+			}
+			if(!servDown.isBlank() && servDown.equalsIgnoreCase("replica")) {
+				replicaDB=serv1_3DB;
+				replicaDOut.writeUTF("5");
+				replicaOOut.writeObject(replicaDB);
+				servDown="";
+			}
+		}
+		
+	
 	}
 }

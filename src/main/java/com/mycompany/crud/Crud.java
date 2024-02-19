@@ -9,6 +9,7 @@ import java.util.concurrent.Semaphore;
 public class Crud extends Thread {
 	Semaphore deleteSemaphore=new Semaphore(1);
 	Semaphore insertSemaphore=new Semaphore(1);
+	
 	public int getOption(String message){
         int option;
         String [] words = message.split(",");
@@ -80,15 +81,14 @@ public class Crud extends Thread {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			for(Tuple t : database){
-				for(Tuple tupleForDeletion : tupleList){
-					if (tupleForDeletion == t){
-						database.remove(t);
-					}
-				}
-			}
-			deleteSemaphore.release();
 		}
+    	for(int i=0;i<database.size();i++)
+    		for(Tuple tupleForDeletion : tupleList){
+    			if (tupleForDeletion.equals(database.get(i))){
+    				database.remove(database.get(i));
+    			}
+    		}
+    	deleteSemaphore.release();
         return database;
     }
     //The addNote method contemplates the redundance of tuples in the database
