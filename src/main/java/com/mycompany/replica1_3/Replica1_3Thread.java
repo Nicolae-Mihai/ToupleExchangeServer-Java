@@ -5,8 +5,6 @@ import com.mycompany.linda.Tuple;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,6 @@ public class Replica1_3Thread extends Crud {
 		this.s1_3r=s1_3r;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 		try {
@@ -81,13 +78,7 @@ public class Replica1_3Thread extends Crud {
 						this.database = deleteNote(results, database);
 						semread.release();
 						out.writeUTF("Coincident results were deleted");
-						break;
-					case 4:
-						ObjectOutputStream objectOutput = new ObjectOutputStream(cs.getOutputStream());
-			            objectOutput.writeObject(database);
-					case 5:
-						ObjectInputStream objectInput = new ObjectInputStream(cs.getInputStream());
-						this.database=(List<Tuple>) objectInput.readObject();
+						
 				}
 
 			}

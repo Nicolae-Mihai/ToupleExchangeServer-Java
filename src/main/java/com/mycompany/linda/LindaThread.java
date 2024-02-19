@@ -3,11 +3,7 @@ package com.mycompany.linda;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.mycompany.crud.Crud;
 import com.mycompany.replica1_3.ConnectionReplica;
@@ -50,7 +46,7 @@ public class LindaThread extends Crud {
 				if(this.cs.isConnected()) {
 					String message = in.readUTF();
 					check();
-					checkLoss();
+//					checkLoss();
 					words=message.split(",");
 					System.out.println(words.length);
 					
@@ -81,7 +77,7 @@ public class LindaThread extends Crud {
 				}
 			}
 	        cs.close();// Ends the connection with the client
-		} catch (IOException | ClassNotFoundException e) {
+		} catch (IOException exception) {
 			System.out.println("Client disconnected!");
 		}
 	}
@@ -123,51 +119,5 @@ public class LindaThread extends Crud {
 			try {this.serv6 = new ConnectionServ6("client");} 
 				catch (Exception e) {System.out.println("Serv6 is offline");}
 		
-	}
-//	Method to check if there were losses in the servers database while one was down(serv1_3 and replica)
-	@SuppressWarnings("unchecked")
-	private void checkLoss() throws IOException, ClassNotFoundException {
-		ObjectOutputStream replicaOOut=new ObjectOutputStream(this.replica.getCs().getOutputStream());
-		ObjectInputStream replicaOIn=new ObjectInputStream(this.replica.getCs().getInputStream());
-		DataOutputStream replicaDOut = new DataOutputStream(this.replica.getCs().getOutputStream());
-//		DataInputStream replicaDIn = new DataInputStream(this.replica.getCs().getInputStream());
-
-		ObjectOutputStream serv1_3OOut=new ObjectOutputStream(this.serv1_3.getCs().getOutputStream());;
-		ObjectInputStream serv1_3OIn=new ObjectInputStream(this.serv1_3.getCs().getInputStream());
-		DataOutputStream Serv1_3DOut = new DataOutputStream(this.serv1_3.getCs().getOutputStream());
-//		DataInputStream serv1_3DIn = new DataInputStream(this.serv1_3.getCs().getInputStream());
-		
-		List<Tuple> replicaDB=new ArrayList<>();
-		List<Tuple> serv1_3DB = new ArrayList<>();
-		
-		String servDown="";
-		
-		if(this.serv1_3 == null && this.replica !=null) {
-			replicaDOut.writeUTF("4");
-			replicaDB=(List<Tuple>) replicaOIn.readObject();
-			servDown="serv1_3";
-		}
-		if(this.serv1_3 != null && this.replica ==null) {
-			Serv1_3DOut.writeUTF("4");
-			serv1_3DB=(List<Tuple>) serv1_3OIn.readObject();
-			servDown="replica";
-		}
-		
-		if (this.serv1_3 !=null && this.replica != null) {
-			if(!servDown.isBlank() && servDown.equalsIgnoreCase("serv1_3")) {
-				serv1_3DB=replicaDB;
-				Serv1_3DOut.writeUTF("5");
-				serv1_3OOut.writeObject(serv1_3DB);
-				servDown="";
-			}
-			if(!servDown.isBlank() && servDown.equalsIgnoreCase("replica")) {
-				replicaDB=serv1_3DB;
-				replicaDOut.writeUTF("5");
-				replicaOOut.writeObject(replicaDB);
-				servDown="";
-			}
-		}
-		
-	
 	}
 }
