@@ -31,7 +31,6 @@ public class Serv4_5Thread extends Crud {
 				String message=in.readUTF();
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;
 				System.out.println("Message recieved -> "+message+" by Serv4_5"+id);
-				out.writeUTF("Recieved ->"+message);
 
 				//Extract the option from the message
 				int option = getOption(message);
@@ -43,32 +42,34 @@ public class Serv4_5Thread extends Crud {
 				switch (option){
 
 					//Case for addNote
+					case 1:
+						this.database = addNote(tuple, database);
+						out.writeUTF("Tuple added succesfully");
+						break;
+					//Case for addNote
 					case 2:
+						
 						ArrayList<Tuple> result = findNote(tuple, database);
-						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
+						if(result.isEmpty()) 
+							out.writeUTF("Not a touple with those characteristcs was found");
+						
 						else{
-
 							//Returns the message of every tuple in the result if not empty
+							String list="Your search results are the following:\n";
+						
 							for(Tuple t : result){
-								out.writeUTF(messagefyer(t));
+								list+=messagefyer(t)+"\n";
 							}
+							out.writeUTF(list);
 						}
-
 						break;
 
 					//Case for deleteNote
 					case 3:
+						
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
 						out.writeUTF("Coincident results were deleted");
-
-						break;
-
-					//Case for addNote
-					case 1:
-						this.database = addNote(tuple, database);
-						out.writeUTF("Tuple added succesfully");
-
 				}
 				
 			}

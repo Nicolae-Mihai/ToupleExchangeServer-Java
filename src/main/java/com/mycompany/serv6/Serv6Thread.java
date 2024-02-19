@@ -27,8 +27,9 @@ public class Serv6Thread extends Crud {
 			
 			while(true) {
 				String message = in.readUTF();
-				String[] words=message.split(",");
 				if(message.equalsIgnoreCase("END OF SERVICE")) break;
+				
+				System.out.println("Message recieved -> "+message+" by Serv6"+id);
 //				this switch checks for the type of action it should take and depending on it returns a different message
 //				to Linda which can in return send that information to the client
 
@@ -40,17 +41,25 @@ public class Serv6Thread extends Crud {
 
 				//Switch case for the options
 				switch (option){
-
+					//Case for addNote
+					case 1:
+						this.database = addNote(tuple, database);
+						out.writeUTF("Tuple added succesfully");
+						break;
 					//Case for addNote
 					case 2:
 						ArrayList<Tuple> result = findNote(tuple, database);
-						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
+						if(result.isEmpty()) 
+							out.writeUTF("Not a touple with those characteristcs was found");
+						
 						else{
-
 							//Returns the message of every tuple in the result if not empty
+							String list="Your search results are the following:\n";
+							
 							for(Tuple t : result){
-								out.writeUTF(messagefyer(t));
+								list+=messagefyer(t)+"\n";
 							}
+							out.writeUTF(list);
 						}
 
 						break;
@@ -60,14 +69,6 @@ public class Serv6Thread extends Crud {
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
 						out.writeUTF("Coincident results were deleted");
-
-						break;
-
-					//Case for addNote
-					case 1:
-						this.database = addNote(tuple, database);
-						out.writeUTF("Tuple added succesfully");
-
 				}
 			}
 			

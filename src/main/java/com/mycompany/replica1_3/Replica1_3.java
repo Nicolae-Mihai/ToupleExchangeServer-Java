@@ -26,7 +26,7 @@ public class Replica1_3 extends ConnectionReplica{
 			int i=0;
 			while(true) {
 				cs=ss.accept();
-				Replica1_3Thread replica1_3Thread=new Replica1_3Thread(i, this.cs);
+				Replica1_3Thread replica1_3Thread=new Replica1_3Thread(i, this.cs,true);
 				replica1_3Thread.start();
 				i++;
 			}

@@ -51,12 +51,15 @@ public class LindaThread extends Crud {
 					
 		        	if(message.equalsIgnoreCase("Not a choice"))
 		        		out.writeUTF("");
-					
+//					TODO: CHECK TO SEE IF SERV1_3 IS RUNNING and make sure the doesn't return anything if serv1_3 is running,also take a look at delete method
+//		        	if the check is not made then both servers will respond at the same time and the servers will lag
 		        	if(1 < words.length && words.length<5) {
-						if(replica!=null)
-		        			out.writeUTF(servIDK(replica.getCs(), message));
-						if(serv1_3!=null)
+						if(serv1_3!=null) {
 							out.writeUTF(servIDK(serv1_3.getCs(), message));
+//							out.writeUTF(servIDK(replica.getCs(), message));
+						}
+						if(replica!=null)
+							servIDK(replica.getCs(), message);
 						
 		        	}else if(4<words.length && words.length<7){
 						out.writeUTF(servIDK(serv4_5.getCs(), message));
@@ -79,7 +82,7 @@ public class LindaThread extends Crud {
 
 //Pass the message to the server so you don't have to do it in every if statement
 	
-	private String servIDK(Socket servSocket,String words) throws IOException{
+	private synchronized String servIDK(Socket servSocket,String words) throws IOException{
 			DataInputStream in = new DataInputStream(servSocket.getInputStream());
 			DataOutputStream out = new DataOutputStream(servSocket.getOutputStream());
 			try {

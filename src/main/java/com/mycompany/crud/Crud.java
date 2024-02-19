@@ -4,9 +4,12 @@ import com.mycompany.linda.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Crud extends Thread {
-    public int getOption(String message){
+	Semaphore deleteSemaphore=new Semaphore(1);
+	Semaphore insertSemaphore=new Semaphore(1);
+	public int getOption(String message){
         int option;
         String [] words = message.split(",");
         option = Integer.parseInt(words[0]);
@@ -52,31 +55,54 @@ public class Crud extends Thread {
 
         //Now we proceed to search the tuples with those values in the indicated position
         ArrayList<Tuple> result = new ArrayList<>();
-        for(Tuple t : database){
-            for(String val : searchValues){
-                int  position = Integer.parseInt(val.substring(val.length() - 1));
-                String word = val.substring(0, val.length() - 1);
-                if(t.getElem().get(position).equalsIgnoreCase(word)) result.add(t);
-            }
+        
+        synchronized (database) {
+        	if(insertSemaphore.availablePermits()==1 && deleteSemaphore.availablePermits()==1) {
+        		
+	        	for(Tuple t : database){
+	        		for(String val : searchValues){
+	        			int  position = Integer.parseInt(val.substring(val.length() - 1));
+	        			String word = val.substring(0, val.length() - 1);
+	        			if(t.getElem().get(position).equalsIgnoreCase(word)) result.add(t);
+	        		}
+	        	}
+        	}
         }
-
         return result;
     }
 
     public List<Tuple> deleteNote(List<Tuple> tupleList, List<Tuple> database){
-        for(Tuple t : database){
-            for(Tuple tupleForDeletion : tupleList){
-                if (tupleForDeletion == t){
-                    database.remove(t);
-                }
-            }
-        }
-
+        
+    	synchronized (database) {
+			if(insertSemaphore.availablePermits()==1)
+				try {
+					deleteSemaphore.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			for(Tuple t : database){
+				for(Tuple tupleForDeletion : tupleList){
+					if (tupleForDeletion == t){
+						database.remove(t);
+					}
+				}
+			}
+			deleteSemaphore.release();
+		}
         return database;
     }
     //The addNote method contemplates the redundance of tuples in the database
     public List<Tuple> addNote(Tuple t, List<Tuple> database){
-        database.add(t);
+        synchronized(database) {
+        	if(deleteSemaphore.availablePermits()==1)
+				try {
+					insertSemaphore.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+        	database.add(t);
+        	insertSemaphore.release();
+        }
 
         return database;
     }
