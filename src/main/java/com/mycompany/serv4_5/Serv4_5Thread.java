@@ -8,12 +8,14 @@ import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Serv4_5Thread extends Crud {
 	
 	private int id;
 	private Socket cs;
 	List<Tuple> database = new ArrayList<>();
+	public Semaphore semread = new Semaphore(1);
 	
 	public Serv4_5Thread(int id,Socket cs) {
 		this.id=id;
@@ -43,13 +45,16 @@ public class Serv4_5Thread extends Crud {
 
 					//Case for addNote
 					case 1:
+
 						this.database = addNote(tuple, database);
 						out.writeUTF("Tuple added succesfully");
 						break;
 					//Case for addNote
 					case 2:
-						
+
+						semread.acquire();
 						ArrayList<Tuple> result = findNote(tuple, database);
+						semread.release();
 						if(result.isEmpty()) 
 							out.writeUTF("Not a touple with those characteristcs was found");
 						
@@ -61,14 +66,16 @@ public class Serv4_5Thread extends Crud {
 								list+=messagefyer(t)+"\n";
 							}
 							out.writeUTF(list);
+
 						}
 						break;
 
 					//Case for deleteNote
 					case 3:
-						
+						semread.acquire();
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
+						semread.release();
 						out.writeUTF("Coincident results were deleted");
 				}
 				

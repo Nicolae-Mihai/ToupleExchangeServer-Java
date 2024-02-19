@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 
 public class Serv1_3Thread extends Crud {
@@ -17,6 +18,7 @@ public class Serv1_3Thread extends Crud {
 	private int id;
 	private Socket cs;
 	List<Tuple> database = new ArrayList<>();
+	public Semaphore semread = new Semaphore(1);
 	public Serv1_3Thread(int id,Socket cs) {
 		this.id=id;
 		this.cs=cs;
@@ -53,7 +55,10 @@ public class Serv1_3Thread extends Crud {
 					
 					//Case for addNote
 					case 2:
+
+						semread.acquire();
 						ArrayList<Tuple> result = findNote(tuple, database);
+						semread.release();
 						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
 						else{
 
@@ -63,13 +68,16 @@ public class Serv1_3Thread extends Crud {
 								list+=messagefyer(t)+"\n";
 							}
 							out.writeUTF(list);
+
 						}
 						break;
 
 					//Case for deleteNote
 					case 3:
+						semread.acquire();
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
+						semread.release();
 						out.writeUTF("Coincident results were deleted");
 						break;
 					case 4:

@@ -10,12 +10,14 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Replica1_3Thread extends Crud {
 	private int id;
 	private Socket cs;
 	public List<Tuple> database = new ArrayList<>();
 	public boolean s1_3r;
+	public Semaphore semread = new Semaphore(1);
 
 	public Replica1_3Thread(int id,Socket cs,boolean s1_3r) {
 		this.id=id;
@@ -48,13 +50,18 @@ public class Replica1_3Thread extends Crud {
 				switch (option){
 					//Case for addNote
 					case 1:
+
+
 						this.database = addNote(tuple, database);
+
 							out.writeUTF("Tuple added succesfully");
 						break;
 
-					//Case for addNote
+					//Case for findNote
 					case 2:
+						semread.acquire();
 						ArrayList<Tuple> result = findNote(tuple, database);
+						semread.release();
 						if(result.isEmpty()) out.writeUTF("Not a touple with those characteristcs was found");
 						else{
 							//Returns the message of every tuple in the result if not empty
@@ -68,8 +75,11 @@ public class Replica1_3Thread extends Crud {
 
 						//Case for deleteNote
 					case 3:
+
+						semread.acquire();
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
+						semread.release();
 						out.writeUTF("Coincident results were deleted");
 						break;
 					case 4:

@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 public class Serv6Thread extends Crud {
 	private int id;
 	protected Socket cs;
 	public List<Tuple> database = new ArrayList<>();
+	public Semaphore semread = new Semaphore(1);
 	public Serv6Thread(int id,Socket cs) {
 		this.cs=cs;
 		this.id=id;
@@ -41,6 +43,7 @@ public class Serv6Thread extends Crud {
 
 				//Switch case for the options
 				switch (option){
+
 					//Case for addNote
 					case 1:
 						this.database = addNote(tuple, database);
@@ -48,7 +51,9 @@ public class Serv6Thread extends Crud {
 						break;
 					//Case for addNote
 					case 2:
+						semread.acquire();
 						ArrayList<Tuple> result = findNote(tuple, database);
+						semread.release();
 						if(result.isEmpty()) 
 							out.writeUTF("Not a touple with those characteristcs was found");
 						
@@ -66,8 +71,10 @@ public class Serv6Thread extends Crud {
 
 					//Case for deleteNote
 					case 3:
+						semread.acquire();
 						List<Tuple> results = findNote(tuple, database);
 						this.database = deleteNote(results, database);
+						semread.release();
 						out.writeUTF("Coincident results were deleted");
 				}
 			}
@@ -76,7 +83,9 @@ public class Serv6Thread extends Crud {
 		
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
 		}
-	
+
 	}
 }
